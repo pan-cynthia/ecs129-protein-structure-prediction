@@ -55,3 +55,26 @@ coord1[["c1", "c2", "c3"]] = coord1[["c1", "c2", "c3"]].apply(
     shift_coordinates, means=coord1_means)
 coord2[["c1", "c2", "c3"]] = coord2[["c1", "c2", "c3"]].apply(
     shift_coordinates, means=coord2_means)
+
+# calculate R values
+R11, R12, R13, R21, R22, R23, R31, R32, R33 = [np.dot(coord1[x],coord2[y]) for x in coord1 for y in coord2]
+
+# generate 4x 4 F matrix
+F_matrix = [[R11 + R22 + R33, R23 - R32, R31 - R13, R12 - R21],
+            [R23 - R32, R11 - R22 - R33, R12 + R21, R13 + R31],
+            [R31 - R13, R12 + R21, -R11 + R22 - R33, R23 + R32],
+            [R12 - R21, R13 + R31, R23 + R32, -R11 - R22 + R33]]
+
+# calculate max eigenvalue and eigenvector of F matrix
+w, v = LA.eig(F_matrix)
+eigen_val = max(w)
+eigen_vec = v[:,np.where(w == eigen_val)[0][0]]
+
+# calculate best-fit RMSD "e"
+sum_sq = (coord1**2 + coord2**2).apply(sum)
+N = len(coord1)
+e_sq = ((sum_sq - 2*eigen_val)/N)
+e = np.sqrt(e_sq)
+
+# Note: For 2*eigen_val ends up larger than the sum of the squared coordinates so sqrt doesn't work on it
+print(e)
