@@ -32,7 +32,6 @@ def get_coordinates(structure):
             data.append(atom.get_coord())
     return data
 
-
 parser = PDBParser()
 
 # structure 1
@@ -43,23 +42,14 @@ coord1 = pd.DataFrame(get_coordinates(structure1), columns=["c1", "c2", "c3"])
 structure2 = parser.get_structure("STRUCT-2", sys.argv[2])
 coord2 = pd.DataFrame(get_coordinates(structure2), columns=["c1", "c2", "c3"])
 
-# get barycenters
-coord1_means = coord1.mean(axis=1)
-coord2_means = coord2.mean(axis=1)
-
-# shift the coordinates to the barycenters
-def shift_coordinates(coord, means):
-    return coord - means
-
-coord1[["c1", "c2", "c3"]] = coord1[["c1", "c2", "c3"]].apply(
-    shift_coordinates, means=coord1_means)
-coord2[["c1", "c2", "c3"]] = coord2[["c1", "c2", "c3"]].apply(
-    shift_coordinates, means=coord2_means)
+# shift the coordinates by barycenters
+coord1 = coord1 - coord1.mean()
+coord2 = coord2 - coord2.mean()
 
 # calculate R values
-R11, R12, R13, R21, R22, R23, R31, R32, R33 = [np.dot(coord1[x],coord2[y]) for x in coord1 for y in coord2]
+R11, R12, R13, R21, R22, R23, R31, R32, R33 = [np.dot(coord1[x], coord2[y]) for x in coord1 for y in coord2]
 
-# generate 4x 4 F matrix
+# generate 4x4 F matrix
 F_matrix = [[R11 + R22 + R33, R23 - R32, R31 - R13, R12 - R21],
             [R23 - R32, R11 - R22 - R33, R12 + R21, R13 + R31],
             [R31 - R13, R12 + R21, -R11 + R22 - R33, R23 + R32],
@@ -68,7 +58,8 @@ F_matrix = [[R11 + R22 + R33, R23 - R32, R31 - R13, R12 - R21],
 # calculate max eigenvalue and eigenvector of F matrix
 w, v = LA.eig(F_matrix)
 eigen_val = max(w)
-eigen_vec = v[:,np.where(w == eigen_val)[0][0]]
+# don't actually use the eigenvector in the calculation
+# eigen_vec = v[:,np.where(w == eigen_val)[0][0]]
 
 # calculate best-fit RMSD "e"
 sum_sq = (coord1**2 + coord2**2).apply(sum)
