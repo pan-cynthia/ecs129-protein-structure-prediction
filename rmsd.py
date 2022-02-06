@@ -55,11 +55,9 @@ F_matrix = [[R11 + R22 + R33, R23 - R32, R31 - R13, R12 - R21],
             [R31 - R13, R12 + R21, -R11 + R22 - R33, R23 + R32],
             [R12 - R21, R13 + R31, R23 + R32, -R11 - R22 + R33]]
 
-# calculate max eigenvalue and eigenvector of F matrix
+# calculate max eigenvalue of F matrix
 w, v = LA.eig(F_matrix)
 eigen_val = max(w)
-# don't actually use the eigenvector in the calculation
-# eigen_vec = v[:,np.where(w == eigen_val)[0][0]]
 
 # calculate best-fit RMSD "e"
 sum_sq = (coord1**2 + coord2**2).apply(sum)
