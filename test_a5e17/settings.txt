@@ -1,4 +1,0 @@
-method=RoseTTAFold
-sequence=PIAQIHILEGRSDEQKETLIREVSEAISRSLDAPLTSVRVIITEMAKGHFGIGGELASK
-msa_method=mmseqs2
-use_templates=False
