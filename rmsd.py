@@ -59,19 +59,11 @@ F_matrix = [[R11 + R22 + R33, R23 - R32, R31 - R13, R12 - R21],
 w, v = LA.eig(F_matrix)
 eigen_val = max(w)
 
-# # calculate best-fit RMSD "e"
-# sum_sq = (coord1**2 + coord2**2).apply(sum)
-# N = len(coord1)
-# e_sq = (sum_sq - 2*eigen_val)/N
-# e = np.sqrt(e_sq)
-
-# # Note: For 2*eigen_val ends up larger than the sum of the squared coordinates so sqrt doesn't work on it
-# print(e)
-
-# calculate best fit RMSD
+# calculate best fit RMSD "e"
 N = len(coord1)
-# use dot product
 sum = sum([np.dot(coord1[x], coord1[x]) + np.dot(coord2[x], coord2[x]) for x in coord1])
-e_sq = (sum - 2 * eigen_val)/N
-e = np.sqrt(e_sq)
+numerator = sum - 2 * eigen_val
+if (abs(numerator) < 10**-2):
+    numerator = 0
+e = np.sqrt(numerator/N)
 print(e)
