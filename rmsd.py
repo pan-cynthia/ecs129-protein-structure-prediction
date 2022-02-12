@@ -62,5 +62,8 @@ eigen_val = max(w)
 # calculate best fit RMSD "e"
 N = len(coord1)
 sum = sum([np.dot(coord1[x], coord1[x]) + np.dot(coord2[x], coord2[x]) for x in coord1])
-e = np.sqrt(round(((sum - 2 * eigen_val)/N), 4))
+numerator = sum - 2 * eigen_val
+if (abs(numerator) < 10**-2):
+    numerator = 0
+e = np.sqrt(numerator/N)
 print(e)
