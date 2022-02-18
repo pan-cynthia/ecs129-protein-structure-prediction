@@ -3,37 +3,32 @@ import pandas as pd
 import numpy as np
 from rmsd import calc_RMSD, create_structure, get_coordinates
 
-def accuracy(coord_gold, coord1, coord2, coord3, coord4, coord5):
+def accuracy(coords):
 	print("accuracy function")
-	# accuracy_array = []
-	# for row in range(len(sys.argv)-1):
-	# 	struct = sys.argv[row+1]
-	# 	rmsd = rmsd_func.main(struct, goldSequence)
-	# 	accuracyArray.append(subArray)
-	# 	print(accuracyArray)
+	coords_gold = coords[0]
+	accuracy_array = []
+	for coord in coords[1:]:
+		e = calc_RMSD(coord, coords_gold)
+		accuracy_array.append(e)
+	print(accuracy_array)
 
 def main():
 	# error handling, check if correct number of arguments passed in
-	if len(sys.argv) != 7:
-		raise TypeError("Wrong number of arguments, 7 expected, {} given".format(len(sys.argv)))
+	if len(sys.argv) < 3:
+		raise TypeError("Wrong number of arguments, at least 3 expected, {} given".format(len(sys.argv)))
 
 	# create structure objects
-	gold_standard = create_structure("GOLD", sys.argv[1])
-	model1 = create_structure("MODEL-1", sys.argv[2])
-	model2 = create_structure("MODEL-2", sys.argv[3])
-	model3 = create_structure("MODEL-3", sys.argv[4])
-	model4 = create_structure("MODEL-4", sys.argv[5])
-	model5 = create_structure("MODEL-5", sys.argv[6])
+	structures = []
+	for i in range(1,len(sys.argv)):
+		structures.append(create_structure("MODEL" + str(i),sys.argv[i]))
 
 	# get coordinates
-	coord_gold = pd.DataFrame(get_coordinates(gold_standard), columns=["c1", "c2", "c3"])
-	coord1 = pd.DataFrame(get_coordinates(model1), columns=["c1", "c2", "c3"])
-	coord2 = pd.DataFrame(get_coordinates(model2), columns=["c1", "c2", "c3"])
-	coord3 = pd.DataFrame(get_coordinates(model3), columns=["c1", "c2", "c3"])
-	coord4 = pd.DataFrame(get_coordinates(model4), columns=["c1", "c2", "c3"])
-	coord5 = pd.DataFrame(get_coordinates(model5), columns=["c1", "c2", "c3"])
+	coords = []
+	for struc in structures:
+		coord = pd.DataFrame(get_coordinates(struc), columns=["c1", "c2", "c3"])
+		coords.append(coord)
 
-	accuracy(coord_gold, coord1, coord2, coord3, coord4, coord5)
+	accuracy(coords)
 
 if __name__ == "__main__":
 	main()
