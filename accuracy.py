@@ -20,7 +20,8 @@ def main():
 	# create structure objects
 	structures = []
 	for i in range(1,len(sys.argv)):
-		structures.append(create_structure("MODEL" + str(i),sys.argv[i]))
+		struc = create_structure("MODEL" + str(i),sys.argv[i])
+		structures.append(struc)
 
 	# get coordinates
 	coords = []
