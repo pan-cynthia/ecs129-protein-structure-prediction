@@ -8,15 +8,15 @@ def precision(coord1, coord2, coord3, coord4, coord5):
 	print("precision function")
 	allCoords = [coord1, coord2, coord3, coord4, coord5]
 
-	predictArray = []
+	precisionArray = []
 	for coordRow in allCoords:
 		smallArray = []
 		for coordCol in allCoords:
 			rmsd = calc_RMSD(coordRow, coordCol)
 			smallArray.append(rmsd)
-		predictArray.append(smallArray)
+		precisionArray.append(smallArray)
 
-	print(predictArray)			
+	print(precisionArray)			
 
 def main():
 	# error handling, check if correct number of arguments passed in
