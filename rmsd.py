@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from numpy import linalg as LA
 
-# data preprocessing
 def get_coordinates(structure):
     """Isolate lines that correspond to an alpha carbon (CA)
     and extract the coordinates
