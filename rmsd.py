@@ -67,7 +67,7 @@ def calc_RMSD(coord1, coord2):
     if (abs(numerator) < 10**-2):
         numerator = 0
     e = np.sqrt(numerator/N)
-    return e
+    return round(e, 5)
 
 def main():
     # error handling, check if correct number of arguments passed in
